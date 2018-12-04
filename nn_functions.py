@@ -207,9 +207,32 @@ def update_with_adam(parameters, grads, v, s,learning_rate = 0.01,beta1 = 0.9, b
 
 	return parameters,v,s
 
+def random_minibatches(X,Y,mini_batch_size=64):
 
+	m=X.shape[1]
+	mini_batches=[]
 
+	permutation=list(np.random.permutation(m))
+	shuffled_x=X[:,permutation]
+	shuffled_y=Y[:,permutation]
 
+	mini_batches_n=int(m/mini_batch_size)
+
+	for k in range(0,mini_batches_n):
+		mini_batch_x=shuffled_x[:,k*mini_batch_size:(k+1)*mini_batch_size]
+		mini_batch_y=shuffled_y[:,k*mini_batch_size:(k+1)*mini_batch_size]
+
+		mini_batch=(mini_batch_x,mini_batch_y)
+		mini_batches.append(mini_batch)
+
+	if m%mini_batch_size !=0:
+		mini_batch_x=shuffled_x[:,(k+1)*mini_batch_size:]
+		mini_batch_y=shuffled_y[:,(k+1)*mini_batch_size:]
+		
+		mini_batch=(mini_batch_x,mini_batch_y)
+		mini_batches.append(mini_batch)
+
+	return mini_batches
 
 def one_hot_encoding(y,size):
 
